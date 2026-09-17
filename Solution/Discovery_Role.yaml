@@ -1,0 +1,24 @@
+---
+- name: "Fetch EC2 tags to identify monitoring‑enabled instances"
+  ansible.builtin.amazon.aws.ec2_info:
+   filters:
+      - Name=tag:monitoring
+      - Name=instance-state-name
+      - Name=instance-state-code
+      - Name=instance-group-state
+    region: "{{ account_region }}"
+  register: ec2_tags
+
+- name: "Create a list of target instances"
+  set_fact:
+    monitoring_instances: >-
+      {{
+        ec2_tags.instances |
+        json_query("[?Tags[?Key=='monitoring' && Value=='enabled'].InstanceId]")
+      }}
+
+- name: "Add each discovered instance to Ansible inventory"
+  add_host:
+    name: "{{ item }}"
+    groups: vm_instances
+    ansible_host: "{{ item }}"    # the private IP will be resolved via SSM later

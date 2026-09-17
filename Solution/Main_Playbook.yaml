@@ -1,0 +1,17 @@
+---
+- name: "Collect disk utilisation across all accounts"
+  hosts: all                     # resolved via dynamic inventory
+  gather_facts: false
+  connection: ssm                # secure, no SSH keys needed
+  vars_files:
+    - ../vars/main.yml
+
+  pre_tasks:
+    - name: "Validate that target has cloudwatch_agent installed"
+      ansible.builtin.debug:
+        msg: "Proceeding with metric push on {{ inventory_hostname }}"
+
+  roles:
+    - discover_vms               # optional – just registers VM tags
+    - collect_disk_info
+    - push_metrics

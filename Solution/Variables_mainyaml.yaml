@@ -1,0 +1,9 @@
+# Thresholds
+disk_warn_pct: 20          # warn when free < 20 %
+disk_crit_pct: 10          # critical when free < 10 %
+
+# Central services
+central_opensearch_endpoint: "search-metrics.us-east-1.es.amazonaws.com"
+opensearch_user: "monitoring"
+# The secret value for the password is fetched at runtime:
+#   aws secretsmanager get-secret-value --secret-id monitoring/opensearch

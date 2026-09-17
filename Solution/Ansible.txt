@@ -1,0 +1,14 @@
+.
+├── inventory/
+│   └── accounts.yml          # dynamic inventory (see below)
+├── playbooks/
+│   └── disk_monitor.yml      # top‑level playbook
+├── roles/
+│   ├── discover_vms/
+│   │   └── tasks/main.yml
+│   ├── collect_disk_info/
+│   │   └── tasks/main.yml
+│   └── push_metrics/
+│       └── tasks/main.yml
+└── vars/
+    └── main.yml              # shared variables (thresholds, etc.)

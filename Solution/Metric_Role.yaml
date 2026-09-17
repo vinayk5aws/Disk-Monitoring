@@ -1,0 +1,12 @@
+- name: "Write disk‑free % to central OpenSearch"
+  community.general.opensearch_write:
+    hosts: "{{ central_opensearch_endpoint }}"
+    index: "disk_metrics"
+    body:
+      account: "{{ account_id }}"
+      instance_id: "{{ inventory_hostname }}"
+      free_pct: "{{ disk_free_pct }}"
+      ts: "{{ ansible_date_time.iso8601 }}"
+    auth:
+      username: "{{ opensearch_user }}"
+      password: "{{ lookup('env','OPENSEARCH_PASSWORD') }}"

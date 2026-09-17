@@ -1,0 +1,27 @@
+---
+- name: "Gather df output for all mount points"
+  ansible.builtin.command: df -P /
+  register: df_output
+  changed_when: false
+
+- name: "Extract free and size in 1‑KB blocks"
+  set_fact:
+    disk_free_kb: "{{ (df_output.stdout | split('\n'))[1] | awk '{print $$4}' }}"
+    disk_total_kb: "{{ (df_output.stdout | split('\n'))[1] | awk '{print $$2}' }}"
+  changed_when: false
+
+- name: "Calculate free %"
+  set_fact:
+    disk_free_pct: "{{ (disk_free_kb | int * 100) // disk_total_kb | int }}"
+
+- name: "Push free‑% as a custom CloudWatch metric"
+  ansible.builtin.cloudwatch:
+    namespace: "AWS/DiskMonitor"
+    metric_name: "RootDiskFreePct"
+    timestamp: "{{ ansible_date_time.iso8601 }}"
+    value: "{{ disk_free_pct }}"
+    unit: Percent
+    state: present
+    region: "{{ account_region }}"
+    aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"

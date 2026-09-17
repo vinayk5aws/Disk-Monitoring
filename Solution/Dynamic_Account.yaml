@@ -1,0 +1,10 @@
+# Example for two accounts – extend with more
+accounts:
+  - name: prod-us-east-1
+    aws_account_id: "111122223333"
+    region: us-east-1
+    ansible_ssh_private_key_file: "~/.ssh/aws_key_prod_us_east_1.pem"
+  - name: prod-eu-west-2
+    aws_account_id: "444455556666"
+    region: eu-west-2
+    ansible_ssh_private_key_file: "~/.ssh/aws_key_prod_eu_west_2.pem"

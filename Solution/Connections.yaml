@@ -1,0 +1,2 @@
+# In the playbook we set `connection: ssm` for every target host
+# (requires the SSM Agent installed and an IAM role with AmazonSSMManagedInstanceCore)
